@@ -8,8 +8,10 @@ def load_data(messages_filepath, categories_filepath):
     """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
-    # concat both file
+    # concat both files
     df = messages.merge(categories, on='id', how='left')
+    
+    df = pd.concat([df, df['categories'].str.split(';', expand=True)], axis='columns')
 
     return df
 
@@ -17,7 +19,7 @@ def clean_data(df):
     """ clean dataset, convert categories to numeric values
     """
     # first row as column's name for categories
-    df.columns = list(df.columns[:5]) + list(df.iloc[0, 5:])
+    df.columns = list(df.columns[:5]) + [c.split('-')[0] for c in df.iloc[0, 5:]]
     
     categories = df.iloc[:, 5:]
 
