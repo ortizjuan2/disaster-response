@@ -4,23 +4,39 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
-    """ load messages and categories, create a dataset merging both files with id as key
+    """ load csv files with messages and categories,
+        create a dataset merging both files with id as key
+
+    input:
+        messages_filepath: str, path to messages csv file
+        categories_filepath: str, path to categories csv file
+
+    return:
+        df: dataframe with data loaded
     """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     # concat both files
     df = messages.merge(categories, on='id', how='left')
-    
-    df = pd.concat([df, df['categories'].str.split(';', expand=True)], axis='columns')
-
+    df = pd.concat([df,
+        df['categories'].str.split(';', expand=True)], axis='columns')
     return df
+
 
 def clean_data(df):
     """ clean dataset, convert categories to numeric values
+        and ensure categories only have two values (0, 1)
+
+    input:
+        df: dataframe with data
+
+    return:
+        df: cleaned dataframe
     """
     # first row as column's name for categories
-    df.columns = list(df.columns[:5]) + [c.split('-')[0] for c in df.iloc[0, 5:]]
-    
+    df.columns = list(df.columns[:5]) + [c.split('-')[0] 
+        for c in df.iloc[0, 5:]]
+
     categories = df.iloc[:, 5:]
 
     for column in categories:
@@ -29,13 +45,13 @@ def clean_data(df):
         # convert column from string to numeric
         categories[column] = pd.to_numeric(categories[column])
         # ensure only 0 or 1 is present in data
-        categories.at[categories[column]>0,column] = 1
+        categories.at[categories[column] > 0, column] = 1
     # drop original categories
     df = df.iloc[:, :4]
 
     df = pd.concat([df, categories], axis='columns')
 
-    #drop duplicates
+    # drop duplicates
     df = df.drop_duplicates()
 
     return df
@@ -43,7 +59,11 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     """ save the clean dataset to a sqlite database
-    """  
+
+    input:
+        df: dataframe with the data
+        database_filename: str, database file path
+    """
     engine = create_engine('sqlite:///'+database_filename)
     df.to_sql('categories', engine, index=False)
 
@@ -59,12 +79,12 @@ def main():
 
         print('Cleaning data...')
         df = clean_data(df)
-        
+
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
-        
+
         print('Cleaned data saved to database!')
-    
+
     else:
         print('Please provide the filepaths of the messages and categories '\
               'datasets as the first and second argument respectively, as '\
@@ -76,4 +96,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
