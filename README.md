@@ -45,11 +45,33 @@ As you can see the the parameters are the messages file, the categories file and
 
 ### 2. Create the model
 
-Once you have create the database the second step is to train a model. 
+Once you have create the database the second step is to train a model. I have used a decision tree regressor DecisionTreeRegressor which will allow multiclass output given that I am trying 
+to predict on 36 different classes from each message.
 
+The process to create the model will use a Pipeline and a Grid Search in order to find the best parameters for the model. The model will be saved in the classifier.pkl file in the models directory.
 
+In order to create the model run the below command inside the models directory
+```sh
+python train_classifier.py classifier.pkl
+```
+In this case the only paramenter needed is the name of the output file with the model.
 
+### 3. Run the API
 
+Now that you have the model, it is time tu run the API.  The API will allow you to enter messages and see the different categories that messages fit:
+
+![API initial screen](./img/api01.png)
+
+When you hit the Classify Message button, you will see the different categories hightlited in green.
+
+![API initial screen](./img/api02.png)
+
+In order to run the API, do the following inside the app directory
+```sh
+python run.py
+```
+
+Then you can open your browser and go to http://127.0.0.1:3001
 
 
 ## Summary of the results of the analysis
