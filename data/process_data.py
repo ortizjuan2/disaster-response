@@ -28,6 +28,8 @@ def clean_data(df):
         categories[column] = categories[column].apply(lambda s: int(s[-1]))
         # convert column from string to numeric
         categories[column] = pd.to_numeric(categories[column])
+        # ensure only 0 or 1 is present in data
+        categories.at[categories[column]>0,column] = 1
     # drop original categories
     df = df.iloc[:, :4]
 
