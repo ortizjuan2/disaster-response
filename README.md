@@ -17,6 +17,7 @@ To run the associated python scripts and flask API please ensure your python env
 
 The following is the directory structure of the project:
 
+```sh
 disaster-response
 ├── app
 │   ├── run.py
@@ -31,6 +32,7 @@ disaster-response
 └── models
     ├── classifier.pkl
     └── train_classifier.py
+```
 
 ### 1. Create the data base
 
