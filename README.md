@@ -52,9 +52,9 @@ The process to create the model will use a Pipeline and a Grid Search in order t
 
 In order to create the model run the below command inside the models directory
 ```sh
-python train_classifier.py classifier.pkl
+python train_classifier.py ../data/database.db classifier.pkl
 ```
-In this case the only paramenter needed is the name of the output file with the model.
+In this case the script needs the path to the database file and the name of the output file with the final model.
 
 ### 3. Run the API
 
